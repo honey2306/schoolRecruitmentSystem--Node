@@ -26,7 +26,7 @@ app.post('/changeResume', async (req, res) => {
     let result = await sqlQurry(sql,[myFile[0], req.session.info.user.username])
     let returnInfo = {}
     if (result.affectedRows === 1) {
-      this.req.session.info.user.resume = myFile[0]
+      req.session.info.user.resume = myFile[0]
       returnInfo = {
         status: '1',
         statusInfo: '修改成功',

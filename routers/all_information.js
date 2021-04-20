@@ -42,7 +42,7 @@ app.post('/all_information', async (req, res) => {
     let sql0 = 'SElECT count(*) FROM school'
     let result0 = await sqlQurry(sql0, [])
     total = result0[0]['count(*)']
-    let sql2 = 'SElECT school_id, name, address, icon FROM school limit ?, ?'
+    let sql2 = 'SElECT school_id, name, address, icon, recruitmentAddress, recruitmentDate FROM school limit ?, ?'
     returnInfo = await sqlQurry(sql2, [(data.currentPage - 1)* data.pageSize,  data.pageSize])
   } else {
     //获取全部企业信息
