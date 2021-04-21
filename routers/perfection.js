@@ -28,7 +28,6 @@ app.put('/perfection', (req, res) => {
     } 
     let sql = ''
     let result = {}
-    console.log(fields);
     if (identity === 'student') {
       sql = `UPDATE ${identity} SET name = ?, school = ?, resume = ? WHERE username = ?`
       result = await sqlQurry(sql,[fields.name[0], fields.school[0], files.file[0].path, Sglobal.get('username')])
@@ -40,7 +39,6 @@ app.put('/perfection', (req, res) => {
       result = await sqlQurry(sql, [fields.name[0], fields.address[0], fields.introduction[0], fields.type[0], fields.state[0], fields.personCount[0], files.file[0].path, Sglobal.get('username')])
     }
     let returnInfo = {}
-    console.log(result);
     if (result.affectedRows === 1) {
       returnInfo.status = '1'
       returnInfo.statusInfo = '完善信息成功'

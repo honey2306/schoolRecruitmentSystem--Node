@@ -6,35 +6,46 @@ let app = express()
 app.get('/recruitment_info', async (req, res) => {
   let id = ''
   let sql = ''
-  let returnInfo = {}
-  let identity = req.session.info.user.identity
-  if (identity === 'school') {
-    id = req.session.info.user.school_id
-    sql = `SElECT * FROM recruitment_info WHERE school_id = ?`
-  } else {
-    id = req.session.info.user.company_id
-    sql = `SElECT * FROM recruitment_info WHERE company_id = ?`
-  }
-  let recruitment_info = await sqlQurry(sql, [id])
   let recruitments = []
-
-  for (let i = 0; i < recruitment_info.length; i++) {
-    let tmp = {
-      recruitment_id: recruitment_info[i].recruitment_id,
-      date: recruitment_info[i].interview_time,
-      professional: recruitment_info[i].profession,
-      address: recruitment_info[i].address
-    }
-    if (identity === 'school') {
+  if (!req.session.info) {
+    sql = `SElECT * FROM recruitment_info`
+    recruitments = await sqlQurry(sql, [])
+    for (let i = 0; i < recruitments.length; i++) {
       sql = `SElECT name FROM company WHERE company_id = ?`
-      let company = await sqlQurry(sql, [recruitment_info[i].company_id])
-      tmp.company_name = company[0].name
-      recruitments.push(tmp)
-    } else {
+      let company = await sqlQurry(sql, [recruitments[i].company_id])
       sql = `SElECT name FROM school WHERE school_id = ?`
-      let school = await sqlQurry(sql, [recruitment_info[i].school_id])
-      tmp.school_name = school[0].name
-      recruitments.push(tmp)
+      let school = await sqlQurry(sql, [recruitments[i].school_id])
+      recruitments[i].school_name = school[0].name
+    }
+
+  } else {
+    let identity = req.session.info.user.identity
+    if (identity === 'school') {
+      id = req.session.info.user.school_id
+      sql = `SElECT * FROM recruitment_info WHERE school_id = ?`
+    } else {
+      id = req.session.info.user.company_id
+      sql = `SElECT * FROM recruitment_info WHERE company_id = ?`
+    }
+    let recruitment_info = await sqlQurry(sql, [id])
+    for (let i = 0; i < recruitment_info.length; i++) {
+      let tmp = {
+        recruitment_id: recruitment_info[i].recruitment_id,
+        date: recruitment_info[i].interview_time,
+        professional: recruitment_info[i].profession,
+        address: recruitment_info[i].address
+      }
+      if (identity === 'school') {
+        sql = `SElECT name FROM company WHERE company_id = ?`
+        let company = await sqlQurry(sql, [recruitment_info[i].company_id])
+        tmp.company_name = company[0].name
+        recruitments.push(tmp)
+      } else {
+        sql = `SElECT name FROM school WHERE school_id = ?`
+        let school = await sqlQurry(sql, [recruitment_info[i].school_id])
+        tmp.school_name = school[0].name
+        recruitments.push(tmp)
+      }
     }
   }
 

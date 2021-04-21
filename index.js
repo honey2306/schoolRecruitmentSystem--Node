@@ -19,6 +19,9 @@ let work_send = require('./routers/work_send')
 let introChange = require('./routers/introChange')
 let recruitmentChange = require('./routers/recruitmentChange')
 let recruitment_info = require('./routers/recruitment_info')
+let able = require('./routers/able')
+
+
 
 // 实例化express
 
@@ -39,6 +42,7 @@ app.all('*',function (req, res, next) {
 });
 
 app.use(hot)
+app.use(able)
 app.use(like)
 app.use(login)
 app.use(logout)
