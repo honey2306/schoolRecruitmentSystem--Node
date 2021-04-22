@@ -10,12 +10,12 @@ app.post('/all_information', async (req, res) => {
   let total = 0
   if (data.type === '1') {
     let result = ''
-    //获取全部职业信息   
+    //获取全部职业信息
     if (data.workType && (data.workType[0] !== 'qb')) {
-      let sql0 = 'SElECT count(*) FROM work WHERE type = ? & approved = 1'
+      let sql0 = 'SElECT count(*) FROM work WHERE type = ? and approved = 1'
       let result0 = await sqlQurry(sql0, [data.workType[0]])
       total = result0[0]['count(*)']
-      let sql = `SElECT * FROM work WHERE type = ? & approved = 1 limit ?, ?`
+      let sql = `SElECT * FROM work WHERE type = ? and approved = 1 limit ?, ?`
       result = await sqlQurry(sql, [data.workType[0], (data.currentPage - 1) * data.pageSize, data.pageSize])
     } else {
       let sql0 = ''
@@ -61,9 +61,9 @@ app.post('/all_information', async (req, res) => {
   } else if (data.type === '3') {
     //获取全部企业信息
     if (data.companyType && (data.companyType[0] !== 'qb')) {
-      let sql3 = 'SElECT company_id, name, address, icon FROM company WHERE type = ? & approved = 1 limit ?, ?'
+      let sql3 = 'SElECT company_id, name, address, icon FROM company WHERE type = ? and approved = 1 limit ?, ?'
       returnInfo = await sqlQurry(sql3, [data.companyType[0], (data.currentPage - 1) * data.pageSize, data.pageSize])
-      let sql0 = 'SElECT count(*) FROM company WHERE type = ? & approved = 1'
+      let sql0 = 'SElECT count(*) FROM company WHERE type = ? and approved = 1'
       let result0 = await sqlQurry(sql0, [data.companyType[0]])
       total = result0[0]['count(*)']
     } else {
